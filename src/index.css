@@ -1,0 +1,908 @@
+/* ============================================================
+   LOLA'S BIRTHDAY — Global Design System
+   Chaotic Cyber-Punk × Billie Eilish Era Transitions
+   ============================================================ */
+
+/* ---------- Google Font imports handled in index.html ---------- */
+
+/* ---------- Design Tokens ---------- */
+:root {
+  --font-display: 'Bebas Neue', 'Oswald', sans-serif;
+  --font-body: 'Special Elite', 'Courier New', monospace;
+
+  /* Era palette */
+  --era1-primary: #00FF41;
+  --era1-bg: #050505;
+  --era2-primary: #4DAAFF;
+  --era2-bg: #0D1F3C;
+  --era3-primary: #FFFFFF;
+  --era3-bg: #0A0A0A;
+  --era4-primary: #111111;
+  --era4-bg: #F5F5F5;
+  --era5-primary: #FF2244;
+  --era5-bg: #C0152A;
+  --era6-primary: #CC88FF;
+  --era6-bg: #4B0082;
+
+  /* Effects */
+  --film-grain-opacity: 0.15;
+  --chromatic-aberration: 3px;
+  --glitch-offset: 4px;
+
+  /* Layout */
+  --scroll-total: 700vh;
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: auto; /* GSAP controls scrolling */
+  overflow-x: hidden;
+}
+
+body {
+  background: #050505;
+  color: #fff;
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  cursor: url('/cursors/spiked-heart.svg') 12 12, auto;
+}
+
+/* ---------- Film Grain Overlay ---------- */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: var(--film-grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  animation: grainShift 0.15s steps(1) infinite;
+}
+
+@keyframes grainShift {
+  0%   { background-position: 0 0; }
+  25%  { background-position: -30px 15px; }
+  50%  { background-position: 15px -30px; }
+  75%  { background-position: -15px 30px; }
+  100% { background-position: 30px -15px; }
+}
+
+/* ---------- Scanlines ---------- */
+.scanlines {
+  position: fixed;
+  inset: 0;
+  z-index: 9997;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.07) 2px,
+    rgba(0,0,0,0.07) 4px
+  );
+}
+
+/* ---------- Chromatic Aberration Text ---------- */
+.glitch-text {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(0 30%, 100% 30%, 100% 60%, 0 60%);
+}
+
+.glitch-text::before {
+  color: #ff0080;
+  left: var(--glitch-offset);
+  animation: glitchBefore 3s infinite steps(2);
+}
+
+.glitch-text::after {
+  color: #00ffff;
+  left: calc(-1 * var(--glitch-offset));
+  animation: glitchAfter 3s infinite steps(2) 0.15s;
+}
+
+@keyframes glitchBefore {
+  0%, 90%, 100% { clip-path: polygon(0 30%, 100% 30%, 100% 60%, 0 60%); transform: translateX(0); }
+  92%  { clip-path: polygon(0 10%, 100% 10%, 100% 40%, 0 40%); transform: translateX(-4px); }
+  94%  { clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%); transform: translateX(4px); }
+  96%  { clip-path: polygon(0 0%, 100% 0%, 100% 20%, 0 20%);   transform: translateX(-2px); }
+}
+
+@keyframes glitchAfter {
+  0%, 90%, 100% { clip-path: polygon(0 50%, 100% 50%, 100% 80%, 0 80%); transform: translateX(0); }
+  92%  { clip-path: polygon(0 20%, 100% 20%, 100% 50%, 0 50%); transform: translateX(4px); }
+  94%  { clip-path: polygon(0 70%, 100% 70%, 100% 100%, 0 100%); transform: translateX(-4px); }
+}
+
+/* ---------- Scroll Journey Container ---------- */
+#scroll-journey {
+  position: relative;
+  height: var(--scroll-total);
+}
+
+.era-panel {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+/* ---------- Typography Utilities ---------- */
+.display-heading {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 12vw, 10rem);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.subheading {
+  font-family: var(--font-body);
+  font-size: clamp(0.9rem, 2vw, 1.4rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+/* ---------- Era-specific text colours ---------- */
+.era-1-text { color: var(--era1-primary); text-shadow: 0 0 20px var(--era1-primary), 0 0 60px var(--era1-primary); }
+.era-2-text { color: var(--era2-primary); }
+.era-3-text { color: var(--era3-primary); }
+.era-4-text { color: var(--era4-primary); }
+.era-5-text { color: var(--era5-primary); }
+.era-6-text { color: var(--era6-primary); text-shadow: 0 0 30px var(--era6-primary); }
+
+/* ---------- Vignette ---------- */
+.vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.85) 100%);
+  z-index: 2;
+}
+
+/* ---------- Flash Warning Banner ---------- */
+#flash-warning {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  background: #1a0000;
+  border-bottom: 2px solid #C0152A;
+  color: #fff;
+  padding: 10px 20px;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  letter-spacing: 0.05em;
+}
+
+#flash-warning label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+#flash-warning button {
+  margin-left: auto;
+  background: none;
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #fff;
+  padding: 2px 12px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+}
+
+#flash-warning button:hover { background: rgba(255,255,255,0.1); }
+
+/* ---------- Preloader ---------- */
+#preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #050505;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+#preloader.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.preloader-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 8vw, 5rem);
+  color: var(--era1-primary);
+  text-shadow: 0 0 30px var(--era1-primary);
+  letter-spacing: 0.1em;
+  animation: preloaderPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes preloaderPulse {
+  0%, 100% { text-shadow: 0 0 20px var(--era1-primary), 0 0 60px var(--era1-primary); }
+  50% { text-shadow: 0 0 5px var(--era1-primary); }
+}
+
+/* Cassette tape progress */
+.cassette-wrapper {
+  position: relative;
+  width: min(360px, 90vw);
+}
+
+.cassette-tape {
+  width: 100%;
+  height: 60px;
+  background: #111;
+  border: 2px solid #333;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 16px;
+}
+
+.cassette-reel {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #555;
+  border-radius: 50%;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.cassette-reel::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  background: #333;
+  border-radius: 50%;
+  border: 1px solid #777;
+}
+
+.cassette-track {
+  flex: 1;
+  height: 8px;
+  background: #1a1a1a;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.cassette-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--era1-primary), #00aa2e);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 8px var(--era1-primary);
+  width: 0%;
+}
+
+.cassette-label {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* ---------- Era-specific backgrounds ---------- */
+.era-1-bg {
+  background: var(--era1-bg);
+}
+
+.era-2-bg {
+  background: linear-gradient(180deg, #0D1F3C 0%, #071022 100%);
+}
+
+.era-3-bg {
+  background: var(--era3-bg);
+}
+
+.era-4-bg {
+  background: var(--era4-bg);
+}
+
+.era-5-bg {
+  background: var(--era5-bg);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 20px,
+    rgba(255,255,255,0.05) 20px,
+    rgba(255,255,255,0.05) 22px
+  );
+}
+
+.era-6-bg {
+  background: linear-gradient(180deg, var(--era6-bg) 0%, #1a0030 100%);
+}
+
+/* ---------- Era 1 — Glow effects ---------- */
+.era-1-glow-border {
+  border: 1px solid var(--era1-primary);
+  box-shadow: 0 0 20px var(--era1-primary), inset 0 0 20px rgba(0,255,65,0.05);
+}
+
+/* ---------- Era 2 — Wavy text ---------- */
+@keyframes waveText {
+  0%, 100% { transform: translateY(0px) rotate(-0.5deg); }
+  25%  { transform: translateY(-8px) rotate(0.5deg); }
+  50%  { transform: translateY(4px) rotate(-0.3deg); }
+  75%  { transform: translateY(-4px) rotate(0.8deg); }
+}
+
+.wavy { animation: waveText 3s ease-in-out infinite; }
+
+/* ---------- Era 4 — Flash overlay ---------- */
+#flash-overlay {
+  position: fixed;
+  inset: 0;
+  background: #fff;
+  z-index: 9990;
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* ---------- Era 5 — Strobe text ---------- */
+@keyframes strobe {
+  0%, 49%, 51%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.strobe-text { animation: strobe 0.3s steps(1) infinite; }
+
+/* ---------- White Noise Flash ---------- */
+@keyframes whiteNoise {
+  0%   { opacity: 0; }
+  50%  { opacity: 0.08; }
+  100% { opacity: 0; }
+}
+
+.noise-flash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 128 128' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: whiteNoise 0.12s steps(1) infinite;
+}
+
+/* ---------- Film Burn (Era 4) ---------- */
+.film-burn {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30vh;
+  pointer-events: none;
+  background: linear-gradient(
+    0deg,
+    rgba(255, 180, 50, 0.15) 0%,
+    rgba(255, 100, 0, 0.08) 40%,
+    transparent 100%
+  );
+  z-index: 3;
+}
+
+/* ---------- Login Gate (Backstage Pass) ---------- */
+#login-gate {
+  min-height: 100vh;
+  background: #050505;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.ticket-stub {
+  width: min(420px, 95vw);
+  background: #f5e6c8;
+  color: #1a1a1a;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 60px rgba(0,255,65,0.2), 0 20px 60px rgba(0,0,0,0.8);
+}
+
+.ticket-stub::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.08'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ticket-header {
+  background: #0a0a0a;
+  color: var(--era1-primary);
+  padding: 20px 28px 16px;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  letter-spacing: 0.15em;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.ticket-divider {
+  height: 24px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.ticket-divider::before {
+  content: '';
+  flex: 1;
+  border-top: 2px dashed rgba(0,0,0,0.25);
+}
+
+.ticket-perforations {
+  position: absolute;
+  left: -12px;
+  right: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.perf-circle {
+  width: 24px;
+  height: 24px;
+  background: #050505;
+  border-radius: 50%;
+}
+
+.ticket-body {
+  padding: 20px 28px 28px;
+  position: relative;
+  z-index: 1;
+}
+
+.ticket-field {
+  margin-bottom: 20px;
+}
+
+.ticket-field label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.ticket-field input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #333;
+  padding: 6px 0;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: #111;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.ticket-field input:focus {
+  border-bottom-color: #000;
+}
+
+.ticket-field input::placeholder {
+  color: #bbb;
+  font-size: 0.85rem;
+}
+
+.ticket-submit {
+  width: 100%;
+  background: #0a0a0a;
+  color: var(--era1-primary);
+  border: none;
+  padding: 16px;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  margin-top: 8px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+}
+
+.ticket-submit:hover {
+  background: #111;
+  text-shadow: 0 0 20px var(--era1-primary);
+}
+
+.ticket-submit:active {
+  transform: scale(0.98);
+}
+
+.ticket-error {
+  color: #C0152A;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  margin-top: 8px;
+  min-height: 18px;
+  font-family: var(--font-body);
+}
+
+/* ---------- Wish Wall ---------- */
+#wish-wall {
+  min-height: 100vh;
+  background: #0a0a0a;
+  position: relative;
+}
+
+/* -- Background Slideshow -- */
+.wish-wall-bg-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.wish-wall-bg-slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: opacity 1.2s ease;
+}
+
+.wish-wall-bg-slide--visible {
+  opacity: 1;
+}
+
+.wish-wall-bg-slide--in {
+  opacity: 0;
+  animation: bgFadeIn 1.2s forwards;
+}
+
+.wish-wall-bg-slide--out {
+  opacity: 0;
+  animation: bgFadeOut 1.2s forwards;
+}
+
+@keyframes bgFadeIn {
+  from { opacity: 0; transform: scale(1.04); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes bgFadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+.wish-wall-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(5, 5, 5, 0.70) 0%,
+    rgba(5, 5, 5, 0.55) 40%,
+    rgba(5, 5, 5, 0.72) 100%
+  );
+}
+
+/* -- Slide dot indicators -- */
+.wish-wall-dots {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+
+.wish-wall-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.3);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+.wish-wall-dot.active {
+  background: var(--era6-primary);
+  transform: scale(1.4);
+  box-shadow: 0 0 10px var(--era6-primary);
+}
+
+/* ensure all content sits above the bg */
+.wish-wall-header,
+.wish-wall-layout,
+#wish-wall > div:last-child {
+  position: relative;
+  z-index: 1;
+}
+
+.wish-wall-header {
+  text-align: center;
+  padding: 60px 20px 40px;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 8vw, 6rem);
+  color: var(--era6-primary);
+  text-shadow: 0 0 40px var(--era6-primary);
+  letter-spacing: 0.05em;
+}
+
+.wish-wall-header span {
+  display: block;
+  font-family: var(--font-body);
+  font-size: clamp(0.7rem, 2vw, 1rem);
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.3em;
+  margin-top: 8px;
+}
+
+.wish-wall-layout {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 0;
+  min-height: calc(100vh - 200px);
+}
+
+@media (max-width: 768px) {
+  .wish-wall-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Wish Form ---------- */
+.wish-form-panel {
+  padding: 32px;
+  border-right: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.wish-form-panel h2 {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  letter-spacing: 0.1em;
+  color: #fff;
+}
+
+.wish-textarea {
+  width: 100%;
+  min-height: 120px;
+  background: rgba(255,255,255,0.03);
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 2px;
+  padding: 14px;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.wish-textarea:focus {
+  border-color: var(--era6-primary);
+  box-shadow: 0 0 20px rgba(204, 136, 255, 0.1);
+}
+
+.wish-char-counter {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.1em;
+  text-align: right;
+}
+
+.wish-char-counter.near-limit { color: #C0152A; }
+
+.wish-submit-btn {
+  background: transparent;
+  border: 2px solid var(--era5-primary);
+  color: var(--era5-primary);
+  padding: 14px 24px;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  letter-spacing: 0.3em;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.wish-submit-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--era5-primary);
+  transform: translateX(-100%);
+  transition: transform 0.25s ease;
+}
+
+.wish-submit-btn:hover::before { transform: translateX(0); }
+.wish-submit-btn:hover { color: #fff; }
+
+.wish-submit-btn span { position: relative; z-index: 1; }
+
+/* ---------- Polaroid Canvas ---------- */
+.polaroid-canvas-panel {
+  position: relative;
+  min-height: 500px;
+}
+
+/* ---------- Audio Toggle ---------- */
+#audio-toggle {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.cassette-btn {
+  width: 64px;
+  height: 64px;
+  background: rgba(10,10,10,0.9);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+  transition: all 0.3s;
+}
+
+.cassette-btn:hover {
+  border-color: var(--era6-primary);
+  box-shadow: 0 0 20px rgba(204,136,255,0.3);
+}
+
+.cassette-btn svg {
+  width: 32px;
+  height: 32px;
+}
+
+.eq-bars {
+  display: flex;
+  gap: 3px;
+  align-items: flex-end;
+  height: 20px;
+}
+
+.eq-bar {
+  width: 4px;
+  background: var(--era6-primary);
+  border-radius: 2px;
+  box-shadow: 0 0 6px var(--era6-primary);
+  animation: eqBounce 0.6s ease-in-out infinite alternate;
+}
+
+.eq-bar:nth-child(1) { animation-delay: 0s; }
+.eq-bar:nth-child(2) { animation-delay: 0.1s; }
+.eq-bar:nth-child(3) { animation-delay: 0.2s; }
+.eq-bar:nth-child(4) { animation-delay: 0.15s; }
+.eq-bar:nth-child(5) { animation-delay: 0.05s; }
+
+@keyframes eqBounce {
+  from { height: 4px; }
+  to   { height: 20px; }
+}
+
+.eq-bars.paused .eq-bar { animation-play-state: paused; height: 4px; }
+
+/* ---------- Cursor Trail Canvas ---------- */
+#cursor-trail {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9996;
+}
+
+/* ---------- Era 6 Particle Trail ---------- */
+.cursor-dot {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--era6-primary);
+  box-shadow: 0 0 8px var(--era6-primary);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s;
+  z-index: 9997;
+}
+
+/* ---------- Caustic Overlay Animation ---------- */
+@keyframes causticMove {
+  0%   { background-position: 0% 0%; opacity: 0.8; }
+  33%  { background-position: 60% 30%; opacity: 1; }
+  66%  { background-position: 30% 70%; opacity: 0.9; }
+  100% { background-position: 0% 0%; opacity: 0.8; }
+}
+
+/* ---------- Reduced Motion Override ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  body::before { animation: none; }
+  .glitch-text::before, .glitch-text::after { display: none; }
+  .strobe-text { animation: none; }
+}
+
+/* ---------- Mobile 3D Disable ---------- */
+@media (max-width: 768px) {
+  .three-canvas-wrapper { display: none; }
+  .mobile-parallax {
+    background-attachment: fixed;
+    background-size: cover;
+  }
+}
+
+/* ---------- Utility ---------- */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.text-center { text-align: center; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-4 { margin-top: 1rem; }
