@@ -6,6 +6,7 @@ const BG_IMAGES = [
   '/images/lola1.jpg',
   '/images/lola2.jpg',
   '/images/lola3.jpg',
+  '/images/lola4.jpg',
 ]
 
 export default function WishWall({ userName, wishes, onAddWish }) {
