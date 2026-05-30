@@ -6,19 +6,19 @@ import * as THREE from 'three'
 /* ─── Draw a Polaroid card onto a canvas ─── */
 function createPolaroidTexture(name, message) {
   const canvas = document.createElement('canvas')
-  canvas.width = 320
-  canvas.height = 380
+  canvas.width = 640
+  canvas.height = 760
   const ctx = canvas.getContext('2d')
 
   // Card background
   ctx.fillStyle = '#f5e6c8'
-  ctx.fillRect(0, 0, 320, 380)
+  ctx.fillRect(0, 0, 640, 760)
 
   // Paper grain
   ctx.globalAlpha = 0.06
-  for (let i = 0; i < 2000; i++) {
-    const x = Math.random() * 320
-    const y = Math.random() * 380
+  for (let i = 0; i < 4000; i++) {
+    const x = Math.random() * 640
+    const y = Math.random() * 760
     const g = Math.random() * 100
     ctx.fillStyle = `rgb(${g},${g},${g})`
     ctx.fillRect(x, y, 1, 1)
@@ -27,50 +27,50 @@ function createPolaroidTexture(name, message) {
 
   // Photo area
   ctx.fillStyle = '#1a1a2e'
-  ctx.fillRect(20, 20, 280, 260)
+  ctx.fillRect(40, 40, 560, 480)
 
   // Gradient in photo area
-  const grad = ctx.createLinearGradient(20, 20, 300, 280)
+  const grad = ctx.createLinearGradient(40, 40, 600, 520)
   grad.addColorStop(0, '#4B0082')
   grad.addColorStop(1, '#C0152A')
   ctx.fillStyle = grad
   ctx.globalAlpha = 0.7
-  ctx.fillRect(20, 20, 280, 260)
+  ctx.fillRect(40, 40, 560, 480)
   ctx.globalAlpha = 1
 
   // Star decoration in photo
   ctx.fillStyle = '#CC88FF'
-  ctx.font = 'bold 48px serif'
+  ctx.font = 'bold 96px serif'
   ctx.textAlign = 'center'
-  ctx.fillText('🖤', 160, 160)
+  ctx.fillText('🖤', 320, 300)
 
   // Name
   ctx.fillStyle = '#1a1a1a'
-  ctx.font = 'bold 16px "Courier New"'
+  ctx.font = 'bold 28px "Courier New"'
   ctx.textAlign = 'left'
-  ctx.fillText(name || 'Anonymous', 20, 308)
+  ctx.fillText(name || 'Anonymous', 40, 576)
 
   // Message — word wrap
-  ctx.font = '13px "Courier New"'
+  ctx.font = '24px "Courier New"'
   ctx.fillStyle = '#333'
   const words = (message || '').split(' ')
   let line = ''
-  let y = 328
-  const maxWidth = 280
-  const lineHeight = 16
+  let y = 616
+  const maxWidth = 560
+  const lineHeight = 30
 
   for (const word of words) {
     const testLine = line + word + ' '
     if (ctx.measureText(testLine).width > maxWidth && line.length > 0) {
-      ctx.fillText(line.trim(), 20, y)
+      ctx.fillText(line.trim(), 40, y)
       line = word + ' '
       y += lineHeight
-      if (y > 370) break
+      if (y > 740) break
     } else {
       line = testLine
     }
   }
-  if (y <= 370) ctx.fillText(line.trim(), 20, y)
+  if (y <= 740) ctx.fillText(line.trim(), 40, y)
 
   return new THREE.CanvasTexture(canvas)
 }
@@ -109,7 +109,7 @@ function Polaroid({ wish, index }) {
         onPointerOver={() => setHovered(true)}
         onPointerOut={() => setHovered(false)}
       >
-        <planeGeometry args={[1.6, 1.9]} />
+        <planeGeometry args={[2.6, 3.1]} />
         <meshStandardMaterial
           map={texture}
           roughness={0.8}
