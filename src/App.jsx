@@ -29,13 +29,11 @@ export default function App() {
   const [warningDismissed, setWarningDismissed] = useState(false)
   const { wishes, addWish } = useWishes()
 
-  // Private wishes page — separate route, no preloader/scroll needed
-  if (route === '#/lola') {
-    return <PrivateWishes />
-  }
+  const isPrivate = route === '#/lola'
 
-  // Cursor trail for Era 6
+  // Cursor trail for Era 6 (only on main site)
   useEffect(() => {
+    if (isPrivate) return
     const dots = []
     const MAX_DOTS = 12
 
@@ -58,7 +56,7 @@ export default function App() {
 
     window.addEventListener('mousemove', onMove, { passive: true })
     return () => window.removeEventListener('mousemove', onMove)
-  }, [])
+  }, [isPrivate])
 
   const handleScrollComplete = useCallback(() => {
     setScrollDone(true)
@@ -72,6 +70,11 @@ export default function App() {
   const handleAddWish = useCallback(async ({ name, message }) => {
     return await addWish({ name, message })
   }, [addWish])
+
+  // Private wishes page — separate route
+  if (isPrivate) {
+    return <PrivateWishes />
+  }
 
   return (
     <>
