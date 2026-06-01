@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import WishForm from '../WishForm/WishForm'
-import PolaroidCanvas from './PolaroidCanvas'
+import MessageBoard from './MessageBoard'
 
 const BG_IMAGES = [
   '/images/lola1.jpg',
@@ -68,7 +68,7 @@ export default function WishWall({ userName, wishes, onAddWish }) {
 
       <div className="wish-wall-layout">
         <WishForm onSubmit={onAddWish} />
-        <PolaroidCanvas wishes={wishes} />
+        <MessageBoard wishes={wishes} />
       </div>
 
       <div style={{

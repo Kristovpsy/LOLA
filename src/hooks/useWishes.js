@@ -15,18 +15,12 @@ export function useWishes() {
           name: 'The Gang',
           message: 'Happy Birthday Lola! You are the most chaotic person we know and we love you for it 🖤',
           timestamp: new Date().toISOString(),
-          position_x: 0.1,
-          position_y: 0.3,
-          rotation: -0.2
         },
         {
           id: 'demo-2',
           name: 'Your Crew',
           message: 'Another year of absolute mayhem with you. Here\'s to many more! 🎸',
           timestamp: new Date().toISOString(),
-          position_x: -0.3,
-          position_y: -0.1,
-          rotation: 0.15
         }
       ])
       setLoading(false)
@@ -75,10 +69,6 @@ export function useWishes() {
   }, [])
 
   const addWish = async ({ name, message }) => {
-    const position_x = (Math.random() - 0.5) * 4
-    const position_y = (Math.random() - 0.5) * 3
-    const rotation = (Math.random() - 0.5) * 0.5
-
     if (!supabase) {
       // Optimistic local add for demo mode
       setWishes(prev => [...prev, {
@@ -86,9 +76,6 @@ export function useWishes() {
         name,
         message,
         timestamp: new Date().toISOString(),
-        position_x,
-        position_y,
-        rotation
       }])
       return { success: true }
     }
@@ -97,9 +84,6 @@ export function useWishes() {
       name,
       message,
       timestamp: new Date().toISOString(),
-      position_x,
-      position_y,
-      rotation
     }])
 
     if (error) {
