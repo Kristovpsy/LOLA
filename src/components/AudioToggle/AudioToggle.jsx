@@ -33,101 +33,49 @@ const CassetteIcon = ({ playing }) => (
 
 export default function AudioToggle() {
   const [playing, setPlaying] = useState(false)
-  const audioCtxRef = useRef(null)
-  const gainRef = useRef(null)
-  const audioElRef = useRef(null)
-  const oscillatorRef = useRef(null)
+  const audioRef = useRef(null)
+  const readyRef = useRef(false)
 
-  const initAudio = () => {
-    if (audioCtxRef.current) return
-    const ctx = new (window.AudioContext || window.webkitAudioContext)()
-    audioCtxRef.current = ctx
-    const gain = ctx.createGain()
-    gain.gain.setValueAtTime(0, ctx.currentTime)
-    gain.connect(ctx.destination)
-    gainRef.current = gain
-
-    // Try loading the real audio file first
+  // Create the audio element once on mount (no autoplay)
+  useEffect(() => {
     const audio = new Audio('/audio/ambient-loop.mp3')
     audio.loop = true
-    audioElRef.current = audio
+    audio.preload = 'auto'
+    audio.volume = 0.6
+    audioRef.current = audio
 
-    audio.addEventListener('canplay', () => {
-      const src = ctx.createMediaElementSource(audio)
-      src.connect(gain)
-    }, { once: true })
+    const onCanPlay = () => { readyRef.current = true }
+    const onError = () => {
+      console.warn('[AudioToggle] Could not load ambient-loop.mp3')
+    }
 
-    audio.load()
-    audio.play().catch(() => {
-      // Fallback: synthesize an ambient drone
-      startSynthDrone(ctx, gain)
-    })
-  }
+    audio.addEventListener('canplay', onCanPlay, { once: true })
+    audio.addEventListener('error', onError, { once: true })
 
-  const startSynthDrone = (ctx, gain) => {
-    if (oscillatorRef.current) return
-    // Layer 2 oscillators for ambient feel
-    const osc1 = ctx.createOscillator()
-    const osc2 = ctx.createOscillator()
-    const osc3 = ctx.createOscillator()
-    osc1.type = 'sine'
-    osc1.frequency.setValueAtTime(55, ctx.currentTime) // A1
-    osc2.type = 'sine'
-    osc2.frequency.setValueAtTime(82.4, ctx.currentTime) // E2
-    osc3.type = 'triangle'
-    osc3.frequency.setValueAtTime(110, ctx.currentTime) // A2
-
-    const lfo = ctx.createOscillator()
-    const lfoGain = ctx.createGain()
-    lfo.frequency.setValueAtTime(0.3, ctx.currentTime)
-    lfoGain.gain.setValueAtTime(5, ctx.currentTime)
-    lfo.connect(lfoGain)
-    lfoGain.connect(osc1.frequency)
-    lfo.start()
-
-    const masterGain = ctx.createGain()
-    masterGain.gain.setValueAtTime(0.15, ctx.currentTime)
-    osc1.connect(masterGain)
-    osc2.connect(masterGain)
-    osc3.connect(masterGain)
-    masterGain.connect(gain)
-
-    osc1.start()
-    osc2.start()
-    osc3.start()
-    oscillatorRef.current = { osc1, osc2, osc3, lfo }
-  }
+    return () => {
+      audio.removeEventListener('canplay', onCanPlay)
+      audio.removeEventListener('error', onError)
+      audio.pause()
+      audio.src = ''
+    }
+  }, [])
 
   const toggle = () => {
-    initAudio()
-    const ctx = audioCtxRef.current
-    const gain = gainRef.current
-    if (!ctx || !gain) return
-
-    if (ctx.state === 'suspended') ctx.resume()
+    const audio = audioRef.current
+    if (!audio) return
 
     if (!playing) {
-      gain.gain.setTargetAtTime(0.6, ctx.currentTime, 0.5)
+      // Play — the user clicked, so browser will allow it
+      audio.play().then(() => {
+        setPlaying(true)
+      }).catch(err => {
+        console.warn('[AudioToggle] Playback failed:', err)
+      })
     } else {
-      gain.gain.setTargetAtTime(0, ctx.currentTime, 0.5)
+      audio.pause()
+      setPlaying(false)
     }
-    setPlaying(p => !p)
   }
-
-  // Tie scroll velocity to playback rate
-  useEffect(() => {
-    if (!playing) return
-    let lastY = window.scrollY
-    const handleScroll = () => {
-      const vel = Math.abs(window.scrollY - lastY)
-      lastY = window.scrollY
-      if (audioElRef.current) {
-        audioElRef.current.playbackRate = Math.min(2, 1 + vel / 500)
-      }
-    }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [playing])
 
   return (
     <div id="audio-toggle">

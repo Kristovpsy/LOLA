@@ -4,9 +4,23 @@ import ScrollJourney from './components/ScrollJourney/ScrollJourney'
 import LoginGate from './components/Login/LoginGate'
 import WishWall from './components/WishWall/WishWall'
 import AudioToggle from './components/AudioToggle/AudioToggle'
+import PrivateWishes from './components/PrivateWishes/PrivateWishes'
 import { useWishes } from './hooks/useWishes'
 
+function useHashRoute() {
+  const [route, setRoute] = useState(window.location.hash || '#/')
+
+  useEffect(() => {
+    const onHash = () => setRoute(window.location.hash || '#/')
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [])
+
+  return route
+}
+
 export default function App() {
+  const route = useHashRoute()
   const [loaded, setLoaded] = useState(false)
   const [scrollDone, setScrollDone] = useState(false)
   const [loggedIn, setLoggedIn] = useState(false)
@@ -14,6 +28,11 @@ export default function App() {
   const [flashEnabled, setFlashEnabled] = useState(true)
   const [warningDismissed, setWarningDismissed] = useState(false)
   const { wishes, addWish } = useWishes()
+
+  // Private wishes page — separate route, no preloader/scroll needed
+  if (route === '#/lola') {
+    return <PrivateWishes />
+  }
 
   // Cursor trail for Era 6
   useEffect(() => {

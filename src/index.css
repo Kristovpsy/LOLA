@@ -1034,3 +1034,248 @@ body::before {
 .text-center { text-align: center; }
 .mt-2 { margin-top: 0.5rem; }
 .mt-4 { margin-top: 1rem; }
+
+/* ---------- Private Wishes Gate ---------- */
+.private-gate {
+  min-height: 100vh;
+  background: #050505;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.private-gate-card {
+  width: min(440px, 95vw);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 48px 36px;
+  text-align: center;
+  backdrop-filter: blur(12px);
+}
+
+.private-gate-icon {
+  font-size: 3.5rem;
+  margin-bottom: 16px;
+  animation: preloaderPulse 2s ease-in-out infinite;
+}
+
+.private-gate-card h1 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: var(--era6-primary);
+  text-shadow: 0 0 30px var(--era6-primary);
+  letter-spacing: 0.08em;
+  margin: 0 0 12px;
+}
+
+.private-gate-card p {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.12em;
+  line-height: 1.6;
+  margin: 0 0 28px;
+}
+
+.private-gate-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.private-gate-card input {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 6px;
+  padding: 14px 16px;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  letter-spacing: 0.15em;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  box-sizing: border-box;
+}
+
+.private-gate-card input:focus {
+  border-color: var(--era6-primary);
+  box-shadow: 0 0 20px rgba(204,136,255,0.15);
+}
+
+.private-gate-card input::placeholder {
+  color: rgba(255,255,255,0.2);
+}
+
+.private-gate-error {
+  color: #C0152A;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+}
+
+.private-gate-card button {
+  background: transparent;
+  border: 2px solid var(--era6-primary);
+  color: var(--era6-primary);
+  padding: 14px;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  letter-spacing: 0.25em;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.private-gate-card button:hover {
+  background: var(--era6-primary);
+  color: #fff;
+  box-shadow: 0 0 30px rgba(204,136,255,0.3);
+}
+
+.private-gate-back {
+  display: inline-block;
+  margin-top: 24px;
+  color: rgba(255,255,255,0.3);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.private-gate-back:hover { color: var(--era6-primary); }
+
+/* ---------- Private Wishes Page ---------- */
+.private-wishes {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #050505 0%, #0a0012 100%);
+  padding-bottom: 60px;
+}
+
+.private-wishes-header {
+  text-align: center;
+  padding: 48px 20px 40px;
+  position: relative;
+}
+
+.private-wishes-header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  color: var(--era6-primary);
+  text-shadow: 0 0 40px var(--era6-primary);
+  letter-spacing: 0.06em;
+  margin: 0 0 8px;
+}
+
+.private-wishes-header p {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.private-back-link {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  color: rgba(255,255,255,0.3);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.private-back-link:hover { color: var(--era6-primary); }
+
+.private-wishes-grid {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.private-loading,
+.private-empty {
+  text-align: center;
+  padding: 60px 20px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.15em;
+}
+
+.private-wish-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 22px 24px;
+  backdrop-filter: blur(8px);
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+  animation: messageSlideIn 0.4s ease-out both;
+}
+
+.private-wish-card:hover {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(204,136,255,0.2);
+  box-shadow: 0 4px 30px rgba(204,136,255,0.08);
+  transform: translateY(-2px);
+}
+
+.private-wish-card-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.private-wish-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--era6-primary), var(--era1-primary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: #fff;
+  flex-shrink: 0;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.private-wish-name {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.85);
+}
+
+.private-wish-date {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.1em;
+  margin-top: 2px;
+}
+
+.private-wish-message {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.02em;
+  margin: 0;
+  word-break: break-word;
+}
+
